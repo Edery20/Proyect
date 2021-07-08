@@ -1,0 +1,250 @@
+/*==============================================================*/
+/* Table: AGENTE                                                */
+/*==============================================================*/
+create table AGENTE (
+   IDAGENTE             INT4                 not null,
+   IDCONTRATO           INT4                 null,
+   NOMBRECLI            VARCHAR(40)          null,
+   APELLIDOCLI          VARCHAR(40)          null,
+   TELEFONO             INT4                 null,
+   DIRECCIONCLI         VARCHAR(40)          null,
+   constraint PK_AGENTE primary key (IDAGENTE)
+);
+
+/*==============================================================*/
+/* Index: AGENTE_PK                                             */
+/*==============================================================*/
+create unique index AGENTE_PK on AGENTE (
+IDAGENTE
+);
+
+/*==============================================================*/
+/* Index: RELATIONSHIP_4_FK                                     */
+/*==============================================================*/
+create  index RELATIONSHIP_4_FK on AGENTE (
+IDCONTRATO
+);
+
+/*==============================================================*/
+/* Table: APORTACIONES                                          */
+/*==============================================================*/
+create table APORTACIONES (
+   IDAPOTACIONES        INT4                 not null,
+   IDCLIENTE            INT4                 null,
+   NOOMBRECLIENTE       VARCHAR(40)          null,
+   APORTACION           INT4                 null,
+   constraint PK_APORTACIONES primary key (IDAPOTACIONES)
+);
+
+/*==============================================================*/
+/* Index: APORTACIONES_PK                                       */
+/*==============================================================*/
+create unique index APORTACIONES_PK on APORTACIONES (
+IDAPOTACIONES
+);
+
+/*==============================================================*/
+/* Index: RELATIONSHIP_3_FK                                     */
+/*==============================================================*/
+create  index RELATIONSHIP_3_FK on APORTACIONES (
+IDCLIENTE
+);
+
+/*==============================================================*/
+/* Table: CLIENTE                                               */
+/*==============================================================*/
+create table CLIENTE (
+   IDCLIENTE            INT4                 not null,
+   NOMBRECLI            VARCHAR(40)          null,
+   APELLIDOCLI          VARCHAR(40)          null,
+   EDAD                 INT4                 null,
+   TELEFONO             INT4                 null,
+   DIRECCIONCLI         VARCHAR(40)          null,
+   FECHA_NACIMIENTO     DATE                 null,
+   NACIONALIDAD         VARCHAR(40)          null,
+   CONTRATO             INT4                 null,
+   BENEFICIARIO         VARCHAR(100)         null,
+   constraint PK_CLIENTE primary key (IDCLIENTE)
+);
+
+/*==============================================================*/
+/* Index: CLIENTE_PK                                            */
+/*==============================================================*/
+create unique index CLIENTE_PK on CLIENTE (
+IDCLIENTE
+);
+
+/*==============================================================*/
+/* Table: CONTRTO                                               */
+/*==============================================================*/
+create table CONTRTO (
+   IDCONTRATO           INT4                 not null,
+   IDCLIENTE            INT4                 null,
+   AGENTE               INT4                 null,
+   IDDECLIENTE          INT4                 null,
+   TIPOSEGURO           INT4                 null,
+   NAPORTES             INT4                 null,
+   ULTIMOAPORTE         DATE                 null,
+   CADUCIDAD            VARCHAR(10)          null,
+   constraint PK_CONTRTO primary key (IDCONTRATO)
+);
+
+/*==============================================================*/
+/* Index: CONTRTO_PK                                            */
+/*==============================================================*/
+create unique index CONTRTO_PK on CONTRTO (
+IDCONTRATO
+);
+
+/*==============================================================*/
+/* Index: RELATIONSHIP_6_FK                                     */
+/*==============================================================*/
+create  index RELATIONSHIP_6_FK on CONTRTO (
+IDCLIENTE
+);
+
+/*==============================================================*/
+/* Table: FALLECIMIENTO                                         */
+/*==============================================================*/
+create table FALLECIMIENTO (
+   IDFALLECIMIENTO      INT4                 not null,
+   IDCLIENTE            INT4                 null,
+   IDDECLIENTE          INT4                 null,
+   FECHAFALLECIMIENTO   DATE                 null,
+   MOTIVODEFALLECIMIENTO VARCHAR(50)          null,
+   constraint PK_FALLECIMIENTO primary key (IDFALLECIMIENTO)
+);
+
+/*==============================================================*/
+/* Index: FALLECIMIENTO_PK                                      */
+/*==============================================================*/
+create unique index FALLECIMIENTO_PK on FALLECIMIENTO (
+IDFALLECIMIENTO
+);
+
+/*==============================================================*/
+/* Index: RELATIONSHIP_7_FK                                     */
+/*==============================================================*/
+create  index RELATIONSHIP_7_FK on FALLECIMIENTO (
+IDCLIENTE
+);
+
+/*==============================================================*/
+/* Table: TIPOSEGUROS                                           */
+/*==============================================================*/
+create table TIPOSEGUROS (
+   IDSEGUROS            INT4                 not null,
+   IDCONTRATO           INT4                 null,
+   SEGURO               VARCHAR(100)         null,
+   VALOR                INT4                 null,
+   constraint PK_TIPOSEGUROS primary key (IDSEGUROS)
+);
+
+/*==============================================================*/
+/* Index: TIPOSEGUROS_PK                                        */
+/*==============================================================*/
+create unique index TIPOSEGUROS_PK on TIPOSEGUROS (
+IDSEGUROS
+);
+
+/*==============================================================*/
+/* Index: RELATIONSHIP_5_FK                                     */
+/*==============================================================*/
+create  index RELATIONSHIP_5_FK on TIPOSEGUROS (
+IDCONTRATO
+);
+
+alter table AGENTE
+   add constraint FK_AGENTE_RELATIONS_CONTRTO foreign key (IDCONTRATO)
+      references CONTRTO (IDCONTRATO)
+      on delete restrict on update restrict;
+
+alter table APORTACIONES
+   add constraint FK_APORTACI_RELATIONS_CLIENTE foreign key (IDCLIENTE)
+      references CLIENTE (IDCLIENTE)
+      on delete restrict on update restrict;
+
+alter table CONTRTO
+   add constraint FK_CONTRTO_RELATIONS_CLIENTE foreign key (IDCLIENTE)
+      references CLIENTE (IDCLIENTE)
+      on delete restrict on update restrict;
+
+alter table FALLECIMIENTO
+   add constraint FK_FALLECIM_RELATIONS_CLIENTE foreign key (IDCLIENTE)
+      references CLIENTE (IDCLIENTE)
+      on delete restrict on update restrict;
+
+alter table TIPOSEGUROS
+   add constraint FK_TIPOSEGU_RELATIONS_CONTRTO foreign key (IDCONTRATO)
+      references CONTRTO (IDCONTRATO)
+      on delete restrict on update restrict;
+
+//insertar//
+insert into cliente(
+idcliente, nombrecli, apellidocli, edad, telefono, fecha_nacimiento, nacionalida, contrato, beneficiario)
+values('23732','Patric','Vera','39','0937642643','El Palmar','1982/02/15','Ecuatoriana','1258743','Priscila'),
+('64287','Alexander','Delgado','45','0942673237','Porvenir','Ecuatoriana','4749841','Jose'),
+('13130','Mathias','Mendoza','52','0978373256','20 De Mayo','Ecuatoriana','5232455','Yessica'),
+('34882','Karen','Perez','30','0938732492','Tarqui','Ecuatoriana','7637821','Manuel'),
+('36383','Samantha','Vinces','28','0973832123','Santa Ana','Ecuatoriana','536173','Carolina');
+
+insert into fallecimiento(
+idfallecimiento, idcliente, fechafallecimiento,motivodefallecimiento)
+values('89329','34882','2020/01/16','Paro Cardiaco'),('23669','36382','2019/11/05','Accidente');
+
+insert into tiposeguro(
+idseguro, seguro, valor)
+values('22083','Fallecimiento','30000'),('54324','Mixto','75000'),('58371','Ahorro','100000');
+
+insert into aportaciones(
+idaportaciones, nombrecliente,aportacion)
+values('2383','Patric','300'),('6443','Alexander','500'),
+('3453','Mathias','650'),('5737','Karen','400'),
+('7965','Samantha','250');
+
+insert into agente(
+idagente, nombreag, apellidoag, telefono, direccionag)
+values('2','Victor','Zambrano','098264326','La Pradera'),
+('3','Sara','Pincay','093264634','Jocay'),
+('4','Carlos','Cedeño','0934832384','La Aurora'),
+('5','Juan','Delgado','0937324327','Los Esteros');
+
+insert into contrto(
+idcontrato, agente, iddecliente,tiposeguro,naportes,ultimoaporte,caducidad)
+values('1258743','1','23732','22083','15','2021/07/02','si'),
+('4749841','2','64287','54324','30','2020/11/15','no'),
+('5232455','3','13130','58371','40','2015/05/20','si'),
+('7637821','4','34882','22083','25','2021/03/23','si'),
+('536173','5','36383','54324','28','2019/07/03','no');
+
+//consultas//
+//Los tipos de seguros y que por cada tipo de seguro a tenido en recaudación física//
+
+Select   t.idseguros, t.seguro,  t.valor,  c.naportes      from tiposeguros as t
+Inner join contrato as c on c.tiposeguro=idseguros
+
+//Cuantas personas le a caducado el seguro de vida y hasta que fecha aporto//
+
+select cliente.contrato, contrto.idcontrato, contrto.ultimoaporte from cliente
+inner join contrto on cliente.contrato=contrto.idcontrato
+where contrto.caducidad='no'
+
+select cliente.contrato, contrto.idcontrato, contrto.ultimoaporte from cliente
+inner join contrto on cliente.contrato=contrto.idcontrato
+where contrto.caducidad='si'
+
+//Tipo e muerte que se registra el asegurado y el valor total de pago//
+
+select cliente.idcliente, cliente.nombrecli, fallecimiento.motivodefallecimiento,
+aportaciones.aportacion as totalpago from cliente
+inner join fallecimiento on fallecimiento.idcliente=cliente.idcliente
+inner join aportaciones on aportaciones.idapotaciones=cliente.idcliente
+
+
+//Que agente hizo contrato y que tipo de seguro adquirió el cliente//
+
+select agente.idagente, agente.nombreag, contrto.idcontrato, tiposeguros.seguro, 
+cliente.nombrecli from agente
+inner join contrto on contrto.agente= agente.idagente
+inner join cliente on cliente.idcliente= contrto.iddecliente
+inner join tiposeguros on tiposeguros.idseguros= contrto.tiposeguro
